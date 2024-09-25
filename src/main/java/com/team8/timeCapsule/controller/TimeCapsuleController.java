@@ -1,9 +1,12 @@
 package com.team8.timeCapsule.controller;
 
+import com.team8.timeCapsule.dto.TimeCapsuleRequest;
+import com.team8.timeCapsule.dto.TimeCapsuleResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/myboard")
