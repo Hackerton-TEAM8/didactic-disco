@@ -4,6 +4,7 @@ package com.team8.timeCapsule.controller;
 import com.team8.timeCapsule.dto.TimeCapsuleRequest;
 import com.team8.timeCapsule.dto.TimeCapsuleResponse;
 import com.team8.timeCapsule.service.TimeCapsuleService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -20,9 +21,9 @@ public class TimeCapsuleController {
 
     private final TimeCapsuleService timeCapsuleService;
 
-    @PostMapping
+    @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<String> createTimeCapsule(
-            @RequestPart("data") @Validated TimeCapsuleRequest request,
+            @RequestPart("json") @Valid TimeCapsuleRequest request,
             @RequestPart(value = "file", required = false) MultipartFile file) {
         timeCapsuleService.createTimeCapsule(request, file);
         return ResponseEntity.ok("타임캡슐 등록 완료");
