@@ -4,6 +4,7 @@ import com.team8.timeCapsule.dto.TimeCapsuleRequest;
 import com.team8.timeCapsule.dto.TimeCapsuleResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +14,12 @@ import java.util.List;
 public class TimeCapsuleController {
 
     @PostMapping
-    public ResponseEntity<String> createTimeCapsule(@RequestBody TimeCapsuleRequest request) {
-        // 타임캡슐 등록 로직
+    public ResponseEntity<String> createTimeCapsule(
+            @RequestPart("data") TimeCapsuleRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
+        timeCapsuleService.createTimeCapsule(request, file);
         return ResponseEntity.ok("타임캡슐 등록 완료");
     }
-
     @GetMapping
     public ResponseEntity<List<TimeCapsuleResponse>> getAllTimeCapsules() {
         // 타임캡슐 전체 조회 로직

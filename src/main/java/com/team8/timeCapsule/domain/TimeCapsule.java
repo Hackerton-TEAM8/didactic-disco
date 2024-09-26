@@ -17,6 +17,7 @@ public class TimeCapsule {
 
     private LocalDate unlockDate;
 
+    private String imageUrl;
     private Boolean isActive;
 
 }
