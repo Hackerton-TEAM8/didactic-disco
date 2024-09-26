@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "`user`")
 public class User {
 
     @Id
@@ -14,9 +15,6 @@ public class User {
     private String password;
 
     private String username;
-
-    @OneToMany(mappedBy = "user")
-    private List<Content> contents;
 
 
 }
