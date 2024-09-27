@@ -1,4 +1,6 @@
-
+# Spring configuration import
+spring:
+  config:
 # DATABASE ??
     h2:
         console:
