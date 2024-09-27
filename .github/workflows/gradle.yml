@@ -58,10 +58,12 @@ jobs:
       run: |
         if [ $(sudo docker ps -a -q -f name=spring-cicd-test) ]; then
           sudo docker stop spring-cicd-test
+          sudo docker rm spring-cicd-test  # 기존 컨테이너 삭제
         fi
 
-    - name: docker run new container
-      run: sudo docker run --rm -it -d -p 80:8080 --name spring-cicd-test ${{ secrets.DOCKERHUB_USERNAME }}/spring-cicd-test
+    - name: docker run new container with restart policy
+      run: sudo docker run --rm -it -d --restart always -p 80:8080 --name spring-cicd-test ${{ secrets.DOCKERHUB_USERNAME }}/spring-cicd-test
+      # --restart always 옵션으로 컨테이너가 중단될 경우 자동으로 재시작됨
 
     - name: delete old docker image
       run: sudo docker system prune -f
