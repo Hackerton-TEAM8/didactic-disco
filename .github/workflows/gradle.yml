@@ -33,8 +33,8 @@ jobs:
         files: ./src/main/resources/aws.properties
       env:
 
-          cloud.aws.credentials.accessKey: ${{ AWS_ACCESS_KEY_ID }}
-          cloud.aws.credentials.secretKey: ${{ AWS_SECRET_ACCESS_KEY }}
+          cloud.aws.credentials.accessKey: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          cloud.aws.credentials.secretKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     # Spring Boot 어플리케이션 Build
     - name: Build with Gradle Wrapper
