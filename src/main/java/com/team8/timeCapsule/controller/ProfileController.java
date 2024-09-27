@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/profile")
 public class ProfileController {
-   //테스트할래2
+   //테스트할래3
     @GetMapping
     public ResponseEntity<ProfileResponse> getProfile() {
         // 프로필 조회 로직
