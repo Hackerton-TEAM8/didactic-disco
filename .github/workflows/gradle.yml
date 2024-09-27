@@ -60,8 +60,8 @@ jobs:
           sudo docker stop spring-cicd-test
         fi
 
-    - name: docker run new container
-      run: sudo docker run --rm -it -d -p 80:8080 --name spring-cicd-test ${{ secrets.DOCKERHUB_USERNAME }}/spring-cicd-test
+    #- name: docker run new container
+     # run: sudo docker run --rm -it -d -p 80:8080 --name spring-cicd-test ${{ secrets.DOCKERHUB_USERNAME }}/spring-cicd-test
 
     - name: delete old docker image
       run: sudo docker system prune -f
