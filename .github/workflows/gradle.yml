@@ -51,18 +51,25 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: Docker 이미지 Pull
+    - name: docker pull
       run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/spring-cicd-test
 
-    - name: Docker 컨테이너 중지 및 제거
+    - name: docker stop and remove container
       run: |
         if [ $(sudo docker ps -a -q -f name=spring-cicd-test) ]; then
           sudo docker stop spring-cicd-test
-          sudo docker rm spring-cicd-test
+          sudo docker rm spring-cicd-test  # 기존 컨테이너 삭제
         fi
 
-    - name: 새로운 Docker 컨테이너 실행
-      run: sudo docker run --rm -d -p 80:8080 --name spring-cicd-test ${{ secrets.DOCKERHUB_USERNAME }}/spring-cicd-test
+    - name: docker run new container with restart policy
+      run: sudo docker run -d --restart always -p 80:8080 --name spring-cicd-test ${{ secrets.DOCKERHUB_USERNAME }}/spring-cicd-test
 
-    - name: 오래된 Docker 이미지 삭제
-      run: sudo docker system prune -f
+    - name: 컨테이너 상태 확인
+      run: sudo docker ps -a
+
+    - name: 컨테이너 로그 확인
+      run: sudo docker logs spring-cicd-test || true
+
+    - name: 사용하지 않는 Docker 이미지 삭제
+      run: sudo docker image prune -f
+
