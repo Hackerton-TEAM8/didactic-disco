@@ -1,4 +1,15 @@
 FROM openjdk:17
-ARG JAR_FILE=build/libs/*.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+
+LABEL version=0.1
+
+ARG JAR_NAME=timeCapsule-0.0.1-SNAPSHOT.jar
+
+ARG JAR_PATH=./build/libs/${JAR_NAME}
+
+RUN mkdir -p /app
+
+WORKDIR /app
+
+COPY ${JAR_PATH} /app/app.jar
+
+CMD ["java", "-jar",  "/app/app.jar"]
