@@ -45,24 +45,23 @@ jobs:
     - name: Docker Hub push
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/spring-cicd-test
 
-# 위 과정에서 푸시한 이미지를 ec2에서 풀받아서 실행
+  # 위 과정에서 푸시한 이미지를 ec2에서 풀받아서 실행
   run-docker-image-on-ec2:
     needs: build-docker-image
     runs-on: self-hosted
 
     steps:
-    - name: Docker 이미지 Pull
-      run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/spring-cicd-test
+    - name: docker pull
+      run : sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/spring-cicd-test
 
-    - name: Docker 컨테이너 중지 및 제거
+    - name: docker stop container
       run: |
         if [ $(sudo docker ps -a -q -f name=spring-cicd-test) ]; then
           sudo docker stop spring-cicd-test
-          sudo docker rm spring-cicd-test
         fi
 
-    - name: 새로운 Docker 컨테이너 실행
-      run: sudo docker run --rm -d -p 80:8080 --name spring-cicd-test ${{ secrets.DOCKERHUB_USERNAME }}/spring-cicd-test
+    - name: docker run new container
+      run: sudo docker run --rm -it -d -p 80:8080 --name spring-cicd-test ${{ secrets.DOCKERHUB_USERNAME }}/spring-cicd-test
 
-    - name: 오래된 Docker 이미지 삭제
+    - name: delete old docker image
       run: sudo docker system prune -f
