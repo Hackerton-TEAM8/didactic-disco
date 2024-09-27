@@ -13,6 +13,7 @@ jobs:
       contents: read
 
     steps:
+    
     - uses: actions/checkout@v4
     - name: Set up JDK 17
       uses: actions/setup-java@v4
@@ -25,6 +26,15 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+
+    - name: Set yml file
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: ./src/main/resources/application.properties
+      env:
+
+          cloud.aws.credentials.accessKey: ${{ AWS_ACCESS_KEY_ID }}
+          cloud.aws.credentials.secretKey: ${{ AWS_SECRET_ACCESS_KEY }}
 
     # Spring Boot 어플리케이션 Build
     - name: Build with Gradle Wrapper
