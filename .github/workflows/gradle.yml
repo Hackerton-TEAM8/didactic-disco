@@ -62,8 +62,7 @@ jobs:
         fi
 
     - name: docker run new container with restart policy
-      run: sudo docker run --rm -it -d --restart always -p 80:8080 --name spring-cicd-test ${{ secrets.DOCKERHUB_USERNAME }}/spring-cicd-test
-      # --restart always 옵션으로 컨테이너가 중단될 경우 자동으로 재시작됨
+      run: sudo docker run -it -d --restart always -p 80:8080 --name spring-cicd-test ${{ secrets.DOCKERHUB_USERNAME }}/spring-cicd-test
 
     - name: delete old docker image
       run: sudo docker system prune -f
