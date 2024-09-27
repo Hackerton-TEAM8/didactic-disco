@@ -27,7 +27,7 @@ spring:
 cloud:
     aws:
         s3:
-            bucket: nyumbucket
+            bucket: timecapsule2
         stack:
             auto: false
         region:
