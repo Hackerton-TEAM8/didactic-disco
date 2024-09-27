@@ -51,17 +51,18 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: docker pull
-      run : sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/spring-cicd-test
+    - name: Docker pull
+      run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/spring-cicd-test
 
-    - name: docker stop container
+    - name: Docker stop and remove container
       run: |
         if [ $(sudo docker ps -a -q -f name=spring-cicd-test) ]; then
           sudo docker stop spring-cicd-test
+          sudo docker rm spring-cicd-test
         fi
 
-    - name: docker run new container
-      run: sudo docker run --rm -it -d -p 80:8080 --name spring-cicd-test ${{ secrets.DOCKERHUB_USERNAME }}/spring-cicd-test
+    - name: Docker run new container
+      run: sudo docker run --rm -d -p 80:8080 --name spring-cicd-test ${{ secrets.DOCKERHUB_USERNAME }}/spring-cicd-test
 
-    - name: delete old docker image
+    - name: Delete old Docker images
       run: sudo docker system prune -f
