@@ -71,6 +71,6 @@ jobs:
     - name: 컨테이너 로그 확인
       run: sudo docker logs spring-cicd-test || true
 
-    - name: delete unused docker images
-      run: sudo docker image prune -f
+    #- name: delete unused docker images
+    #  run: sudo docker image prune -f
 
