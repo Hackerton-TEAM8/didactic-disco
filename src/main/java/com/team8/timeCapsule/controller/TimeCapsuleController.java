@@ -44,7 +44,7 @@ public class TimeCapsuleController {
     @PutMapping("/{id}")
     public ResponseEntity<String> updateTimeCapsule(
             @PathVariable Long id,
-            @RequestPart("data") TimeCapsuleRequest request,
+            @RequestPart("json") TimeCapsuleRequest request,
             @RequestPart(value = "file", required = false) MultipartFile file) {
         timeCapsuleService.updateTimeCapsule(id, request, file);
         return ResponseEntity.ok("타임캡슐 수정 완료");
