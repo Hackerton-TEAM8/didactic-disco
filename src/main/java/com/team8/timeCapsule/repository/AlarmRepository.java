@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface AlarmRepository extends JpaRepository<Alarm, Long> {
     // unlockDate가 현재 시각 이전이면서 확인되지 않은 알람 조회
-    List<Alarm> findAllByUnlockDateLessThanEqualAndIsConfirmFalse(LocalDateTime currentTime);
+    List<Alarm> findAllByUnlockDateLessThanEqualAndIsConfirmFalse(LocalDateTime unlockDate);
 }
