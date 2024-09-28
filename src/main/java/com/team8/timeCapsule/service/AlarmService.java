@@ -94,7 +94,6 @@ public class AlarmService {
         }
     }
 
-
     // FCM 푸시 알림 전송 메서드
     private void sendNotificationToUser(String userId, String message) {
         Optional<UserToken> userToken = userTokenRepository.findByUserId(userId);

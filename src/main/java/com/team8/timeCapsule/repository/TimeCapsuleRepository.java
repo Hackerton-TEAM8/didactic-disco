@@ -16,4 +16,8 @@ public interface TimeCapsuleRepository extends JpaRepository<TimeCapsule, Long> 
     // 특정 유저의 열린 타임캡슐 조회 (Unlock Date가 현재보다 이전)
     @Query("SELECT t FROM TimeCapsule t WHERE t.userId = :userId AND t.unlockDate <= :currentDate")
     List<TimeCapsule> findOpenedTimeCapsulesByUserId(String userId, LocalDateTime currentDate);
+
+    // 안열린타입캡슐
+    @Query("SELECT t FROM TimeCapsule t WHERE t.userId = :userId AND t.unlockDate >= :currentDate")
+    List<TimeCapsule> findClosedTimeCapsulesByUserId(String userId, LocalDateTime currentDate);
 }
