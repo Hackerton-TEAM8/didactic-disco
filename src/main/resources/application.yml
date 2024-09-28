@@ -20,7 +20,7 @@ spring:
                 format_sql: true
                 show_sql: false
         hibernate:
-            ddl-auto: none
+            ddl-auto: create
 
 # AWS S3 ??
 cloud:
