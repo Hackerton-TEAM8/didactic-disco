@@ -1,17 +1,14 @@
 package com.team8.timeCapsule.domain;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -34,4 +31,6 @@ public class UserEntity {
     @Column(nullable=true)
     private String password;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Alarm> alarms;
 }
