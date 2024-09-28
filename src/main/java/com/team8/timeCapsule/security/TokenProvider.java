@@ -6,6 +6,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 import com.team8.timeCapsule.domain.UserEntity;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -39,6 +40,15 @@ public class TokenProvider {
                 .compact();
     }
 
+
+    // 요청에서 토큰 추출 메서드 (컨트롤러와 동일)
+    public String getTokenFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
     public String validateAndGetUserId(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
