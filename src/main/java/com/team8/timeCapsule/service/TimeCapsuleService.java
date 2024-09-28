@@ -109,4 +109,14 @@ public class TimeCapsuleService {
                         timeCapsule.getUnlockDate()))
                 .collect(Collectors.toList());
     }
+
+    // 특정 유저의 열린 타임캡슐 조회
+    public List<TimeCapsuleResponse> getOpenedTimeCapsulesByUserId(String userId) {
+        LocalDateTime currentDate = LocalDateTime.now();
+        List<TimeCapsule> timeCapsules = timeCapsuleRepository.findOpenedTimeCapsulesByUserId(userId, currentDate);
+
+        return timeCapsules.stream()
+                .map(TimeCapsuleResponse::new)
+                .collect(Collectors.toList());
+    }
 }

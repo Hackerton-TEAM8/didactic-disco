@@ -62,4 +62,11 @@ public class TimeCapsuleController {
         List<TimeCapsuleResponse> responses = timeCapsuleService.getTimeCapsulesByUserId(userId);
         return ResponseEntity.ok(responses);
     }
+
+    // 특정 유저의 열린 타임캡슐 조회
+    @GetMapping("/opened/{userId}")
+    public ResponseEntity<List<TimeCapsuleResponse>> getOpenedTimeCapsulesByUserId(@PathVariable String userId) {
+        List<TimeCapsuleResponse> responses = timeCapsuleService.getOpenedTimeCapsulesByUserId(userId);
+        return ResponseEntity.ok(responses);
+    }
 }
