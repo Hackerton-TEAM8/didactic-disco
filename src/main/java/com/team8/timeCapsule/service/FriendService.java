@@ -63,7 +63,8 @@ public class FriendService {
         return followRepository.save(follow);
     }
 
-    public Follow acceptFriendRequest(String senderId, String receiverId) {
+    public void acceptFriendRequest(String senderId, String receiverId) {
+        // 친구 요청을 수락할 때 양방향 관계를 생성
         Optional<Follow> followOpt = followRepository.findBySenderAndReceiverAndState(
                 userRepository.findById(senderId).orElse(null),
                 userRepository.findById(receiverId).orElse(null),
@@ -72,9 +73,17 @@ public class FriendService {
         if (followOpt.isPresent()) {
             Follow follow = followOpt.get();
             follow.setState(FriendRequestStatus.ACCEPT);
-            return followRepository.save(follow);
+            followRepository.save(follow); // A -> B 관계
+
+            // B -> A 관계 추가
+            Follow reverseFollow = new Follow();
+            reverseFollow.setSender(userRepository.findById(receiverId).orElse(null));
+            reverseFollow.setReceiver(userRepository.findById(senderId).orElse(null));
+            reverseFollow.setState(FriendRequestStatus.ACCEPT);
+            followRepository.save(reverseFollow); // B -> A 관계
+        } else {
+            throw new IllegalArgumentException("Friend request not found or already accepted");
         }
-        throw new IllegalArgumentException("Friend request not found or already accepted");
     }
 
     public void rejectFriendRequest(String senderId, String receiverId) {
@@ -90,12 +99,24 @@ public class FriendService {
     }
 
     public void deleteFriend(String senderId, String receiverId) {
-        Optional<Follow> followOpt = followRepository.findBySenderAndReceiverAndState(
+        // A -> B 관계 삭제
+        Optional<Follow> followOpt1 = followRepository.findBySenderAndReceiverAndState(
                 userRepository.findById(senderId).orElse(null),
                 userRepository.findById(receiverId).orElse(null),
                 FriendRequestStatus.ACCEPT);
 
-        followOpt.ifPresent(follow -> {
+        followOpt1.ifPresent(follow -> {
+            follow.setState(FriendRequestStatus.DELETE);
+            followRepository.save(follow);
+        });
+
+        // B -> A 관계 삭제
+        Optional<Follow> followOpt2 = followRepository.findBySenderAndReceiverAndState(
+                userRepository.findById(receiverId).orElse(null),
+                userRepository.findById(senderId).orElse(null),
+                FriendRequestStatus.ACCEPT);
+
+        followOpt2.ifPresent(follow -> {
             follow.setState(FriendRequestStatus.DELETE);
             followRepository.save(follow);
         });

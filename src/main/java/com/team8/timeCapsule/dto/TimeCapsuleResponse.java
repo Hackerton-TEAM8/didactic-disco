@@ -11,16 +11,19 @@ public class TimeCapsuleResponse {
     private Long timeCapsuleId;
     private String userId;
     private String imageUrl;
+    private String title;
     private String text;
     private LocalDateTime createDate;
     private Boolean isActive;
     private LocalDateTime unlockDate;
 
+
     // 생성자
-    public TimeCapsuleResponse(Long timeCapsuleId, String userId, String imageUrl, String text, LocalDateTime createDate, Boolean isActive, LocalDateTime unlockDate) {
+    public TimeCapsuleResponse(Long timeCapsuleId, String userId, String imageUrl,String title, String text, LocalDateTime createDate, Boolean isActive, LocalDateTime unlockDate) {
         this.timeCapsuleId = timeCapsuleId;
         this.userId = userId;
         this.imageUrl = imageUrl;
+        this.title = title;
         this.text = text;
         this.createDate = createDate;
         this.isActive = isActive;
@@ -32,6 +35,7 @@ public class TimeCapsuleResponse {
         this.timeCapsuleId = timeCapsule.getTimeCapsuleId();
         this.userId = timeCapsule.getUserId();  // userId는 String으로
         this.imageUrl = timeCapsule.getImageUrl();
+        this.title = timeCapsule.getTitle();
         this.text = timeCapsule.getText();
         this.createDate = timeCapsule.getCreateDate();
         this.isActive = timeCapsule.getIsActive();  // Boolean으로 맞춰야 함
