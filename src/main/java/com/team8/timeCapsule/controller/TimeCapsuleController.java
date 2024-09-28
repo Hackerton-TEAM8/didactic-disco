@@ -86,6 +86,13 @@ public class TimeCapsuleController {
         return ResponseEntity.ok(responses);
     }
 
+    // 특정 유저의 닫힌 타임캡슐 조회
+    @GetMapping("/closed/{userId}")
+    public ResponseEntity<List<TimeCapsuleResponse>> getClosedTimeCapsulesByUserId(@PathVariable String userId) {
+        List<TimeCapsuleResponse> responses = timeCapsuleService.getClosedTimeCapsulesByUserId(userId);
+        return ResponseEntity.ok(responses);
+    }
+
     @GetMapping("/opened")
     public ResponseEntity<List<TimeCapsuleResponse>> getOpenedTimeCapsulesByUserId(HttpServletRequest request) {
         String token = tokenProvider.getTokenFromRequest(request);

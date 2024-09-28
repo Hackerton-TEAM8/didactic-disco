@@ -124,4 +124,14 @@ public class TimeCapsuleService {
                 .map(TimeCapsuleResponse::new)
                 .collect(Collectors.toList());
     }
+
+    // 특정 유저의 닫힌 타임캡슐 조회
+    public List<TimeCapsuleResponse> getClosedTimeCapsulesByUserId(String userId) {
+        LocalDateTime currentDate = LocalDateTime.now();
+        List<TimeCapsule> timeCapsules = timeCapsuleRepository.findClosedTimeCapsulesByUserId(userId, currentDate);
+
+        return timeCapsules.stream()
+                .map(TimeCapsuleResponse::new)
+                .collect(Collectors.toList());
+    }
 }
