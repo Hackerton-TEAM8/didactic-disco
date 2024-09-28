@@ -32,6 +32,7 @@ public class AlarmService {
         }
     }
 
+    // 알람 생성
     public Alarm createAlarm(String title, String content, Long timeCapsuleId) {
         Alarm alarm = new Alarm();
         alarm.setTitle(title);

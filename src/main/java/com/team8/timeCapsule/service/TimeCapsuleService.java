@@ -8,6 +8,7 @@ import com.team8.timeCapsule.repository.TimeCapsuleRepository;
 import com.team8.timeCapsule.s3.s3Service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +23,6 @@ public class TimeCapsuleService {
 
     private final TimeCapsuleRepository timeCapsuleRepository;
     private final s3Service s3Service;
-
 
     @Transactional
     public void createTimeCapsule(TimeCapsuleRequest request, MultipartFile file) {
