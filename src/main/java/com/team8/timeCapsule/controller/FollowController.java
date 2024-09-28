@@ -46,9 +46,9 @@ public class FollowController {
 
     // 친구 요청 수락하기
     @PostMapping("/accept")
-    public ResponseEntity<Follow> acceptFriendRequest(@RequestParam String senderId, @RequestParam String receiverId) {
-        Follow follow = friendService.acceptFriendRequest(senderId, receiverId);
-        return ResponseEntity.ok(follow);
+    public ResponseEntity<Void> acceptFriendRequest(@RequestParam String senderId, @RequestParam String receiverId) {
+        friendService.acceptFriendRequest(senderId, receiverId);
+        return ResponseEntity.ok().build();
     }
 
     // 친구 요청 거절하기
