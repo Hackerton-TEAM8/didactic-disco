@@ -58,7 +58,7 @@ public class FollowController {
         return ResponseEntity.noContent().build();
     }
 
-    // 친구 삭제하기
+    // 친구 삭제
     @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteFriend(@RequestParam String senderId, @RequestParam String receiverId) {
         friendService.deleteFriend(senderId, receiverId);
