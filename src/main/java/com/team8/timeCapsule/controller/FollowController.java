@@ -24,8 +24,12 @@ public class FollowController {
 
     @GetMapping("/list/{id}") // URL 경로 변수로 변경
     public ResponseEntity<FriendProfileResponse> getFriendList(@PathVariable String id) {
-        FriendProfileResponse response = friendService.getFriendList(id);
-        return ResponseEntity.ok(response);
+        try {
+            FriendProfileResponse response = friendService.getFriendList(id);
+            return ResponseEntity.ok(response); // 200 OK
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build(); // 400 Bad Request
+        }
     }
 
     @GetMapping("/list")
@@ -33,35 +37,55 @@ public class FollowController {
         String token = tokenProvider.getTokenFromRequest(request);
         String id = tokenProvider.validateAndGetUserId(token);
 
-        FriendProfileResponse response = friendService.getFriendList(id);
-        return ResponseEntity.ok(response);
+        try {
+            FriendProfileResponse response = friendService.getFriendList(id);
+            return ResponseEntity.ok(response); // 200 OK
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build(); // 400 Bad Request
+        }
     }
 
     // 친구 요청 보내기
     @PostMapping("/request")
     public ResponseEntity<Follow> sendFriendRequest(@RequestParam String senderId, @RequestParam String receiverId) {
-        Follow follow = friendService.sendFriendRequest(senderId, receiverId);
-        return ResponseEntity.ok(follow);
+        try {
+            Follow follow = friendService.sendFriendRequest(senderId, receiverId);
+            return ResponseEntity.ok(follow); // 200 OK
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build(); // 400 Bad Request
+        }
     }
 
     // 친구 요청 수락하기
     @PostMapping("/accept")
     public ResponseEntity<Void> acceptFriendRequest(@RequestParam String senderId, @RequestParam String receiverId) {
-        friendService.acceptFriendRequest(senderId, receiverId);
-        return ResponseEntity.ok().build();
+        try {
+            friendService.acceptFriendRequest(senderId, receiverId);
+            return ResponseEntity.ok().build(); // 200 OK
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build(); // 400 Bad Request
+        }
     }
 
     // 친구 요청 거절하기
     @PostMapping("/reject")
     public ResponseEntity<Void> rejectFriendRequest(@RequestParam String senderId, @RequestParam String receiverId) {
-        friendService.rejectFriendRequest(senderId, receiverId);
-        return ResponseEntity.noContent().build();
+        try {
+            friendService.rejectFriendRequest(senderId, receiverId);
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build(); // 400 Bad Request
+        }
     }
 
     // 친구 삭제
     @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteFriend(@RequestParam String senderId, @RequestParam String receiverId) {
-        friendService.deleteFriend(senderId, receiverId);
-        return ResponseEntity.noContent().build();
+        try {
+            friendService.deleteFriend(senderId, receiverId);
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build(); // 400 Bad Request
+        }
     }
 }

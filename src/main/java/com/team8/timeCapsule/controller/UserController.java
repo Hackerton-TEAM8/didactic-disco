@@ -40,41 +40,48 @@ public class UserController {
             // 유저 등록
             UserEntity registeredUser = userService.create(user);
             // 등록된 유저 정보를 담아 반환할 DTO 생성
-            UserDTO responseUserDTO = userDTO.builder()
+            UserDTO responseUserDTO = UserDTO.builder()
                     .email(registeredUser.getEmail())
                     .id(registeredUser.getId())
                     .username(registeredUser.getUsername())
                     .build();
 
-            return ResponseEntity.ok().body(responseUserDTO);
+            return ResponseEntity.ok().body(responseUserDTO); // 200 OK
         } catch (Exception e) {
             // 로그에 에러 메시지 출력
             log.error("User registration failed: {}", e.getMessage());
             // 에러 응답 반환
-            return ResponseEntity.badRequest().body("User registration failed: " + e.getMessage());
+            return ResponseEntity.badRequest().body("User registration failed: " + e.getMessage()); // 400 Bad Request
         }
     }
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticate(@RequestBody UserDTO userDTO) {
-        // 유저 인증
-        UserEntity user = userService.getByCredentials(userDTO.getEmail(), userDTO.getPassword(), passwordEncoder);
+        try {
+            // 유저 인증
+            UserEntity user = userService.getByCredentials(userDTO.getEmail(), userDTO.getPassword(), passwordEncoder);
 
-        if (user != null) {
-            // 토큰 생성 및 반환
-            final String token = tokenProvider.create(user);
-            final UserDTO responseUserDTO = UserDTO.builder()
-                    .email(user.getEmail())
-                    .id(user.getId())
-                    .token(token)
-                    .build();
+            if (user != null) {
+                // 토큰 생성 및 반환
+                final String token = tokenProvider.create(user);
+                final UserDTO responseUserDTO = UserDTO.builder()
+                        .email(user.getEmail())
+                        .id(user.getId())
+                        .token(token)
+                        .build();
 
-            return ResponseEntity.ok().body(responseUserDTO);
-        } else {
-            // 로그인 실패 시 로그 출력
-            log.error("Login failed for user: {}", userDTO.getEmail());
+                return ResponseEntity.ok().body(responseUserDTO); // 200 OK
+            } else {
+                // 로그인 실패 시 로그 출력
+                log.error("Login failed for user: {}", userDTO.getEmail());
+                // 에러 응답 반환
+                return ResponseEntity.badRequest().body("Login failed: invalid credentials"); // 400 Bad Request
+            }
+        } catch (Exception e) {
+            // 로그에 에러 메시지 출력
+            log.error("Authentication failed: {}", e.getMessage());
             // 에러 응답 반환
-            return ResponseEntity.badRequest().body("Login failed: invalid credentials");
+            return ResponseEntity.badRequest().body("Authentication failed: " + e.getMessage()); // 400 Bad Request
         }
     }
 }
