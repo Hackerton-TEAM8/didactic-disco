@@ -35,3 +35,11 @@ cloud:
         credentials:
             accessKey: ${AWS_ACCESS_KEY_ID}
             secretKey: ${AWS_SECRET_ACCESS_KEY}
+
+springdoc:
+    api-docs:
+        path: /v3/api-docs
+    swagger-ui:
+        path: /swagger-ui.html
+        enabled: true
+
