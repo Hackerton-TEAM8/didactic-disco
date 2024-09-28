@@ -1,13 +1,11 @@
 package com.team8.timeCapsule.domain;
 
 import jakarta.persistence.*;
-        import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Setter
-@Getter
+@Data
 @Entity
 public class Alarm {
     @Id
@@ -25,6 +23,7 @@ public class Alarm {
     @Column(name = "unlock_date")
     private LocalDateTime unlockDate;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private UserEntity user; // 유저와의 관계 추가
 }
