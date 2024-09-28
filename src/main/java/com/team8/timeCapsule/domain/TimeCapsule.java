@@ -16,7 +16,7 @@ public class TimeCapsule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long timeCapsuleId;
 
-    private Long userId;
+    private String userId;
 
     private String imageUrl;
 

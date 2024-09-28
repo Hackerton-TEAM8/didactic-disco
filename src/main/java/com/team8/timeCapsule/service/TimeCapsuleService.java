@@ -23,6 +23,7 @@ public class TimeCapsuleService {
     private final TimeCapsuleRepository timeCapsuleRepository;
     private final s3Service s3Service;
 
+
     @Transactional
     public void createTimeCapsule(TimeCapsuleRequest request, MultipartFile file) {
         String imageUrl = null;
@@ -92,5 +93,20 @@ public class TimeCapsuleService {
                 .orElseThrow(() -> new RuntimeException("타임캡슐을 찾을 수 없습니다."));
 
         timeCapsule.setIsActive(false);
+    }
+
+    public List<TimeCapsuleResponse> getTimeCapsulesByUserId(String userId) {
+        List<TimeCapsule> timeCapsules = timeCapsuleRepository.findByUserId(userId);
+
+        return timeCapsules.stream()
+                .map(timeCapsule -> new TimeCapsuleResponse(
+                        timeCapsule.getTimeCapsuleId(),
+                        timeCapsule.getUserId(),  // 이 부분은 String으로 반환되어야 합니다
+                        timeCapsule.getImageUrl(),
+                        timeCapsule.getText(),
+                        timeCapsule.getCreateDate(),
+                        timeCapsule.getIsActive(),
+                        timeCapsule.getUnlockDate()))
+                .collect(Collectors.toList());
     }
 }
