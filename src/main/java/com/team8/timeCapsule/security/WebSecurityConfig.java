@@ -46,7 +46,10 @@ public class WebSecurityConfig {
 
         // 공개 엔드포인트 설정
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/auth/**", "/h2-console/**").permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/auth/**")).permitAll()
+                //.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
+                //.requestMatchers("/", "/auth/**", "/h2-console/**").permitAll()
                 .anyRequest().permitAll()
         );
 
