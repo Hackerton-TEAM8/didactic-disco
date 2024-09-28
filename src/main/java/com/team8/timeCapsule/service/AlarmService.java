@@ -7,7 +7,7 @@ import com.team8.timeCapsule.dto.AlarmRequest;
 import com.team8.timeCapsule.dto.AlarmResponse;
 import com.team8.timeCapsule.repository.AlarmRepository;
 import com.team8.timeCapsule.repository.TimeCapsuleRepository;
-import com.team8.timeCapsule.repository.UserTokenRepository;
+//import com.team8.timeCapsule.repository.UserTokenRepository;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification; // Firebase Messaging 임포트 추가
@@ -28,8 +28,8 @@ public class AlarmService {
     @Autowired
     private TimeCapsuleRepository timeCapsuleRepository;
 
-    @Autowired
-    private UserTokenRepository userTokenRepository;
+//    @Autowired
+//    private UserTokenRepository userTokenRepository;
 
     // 알람 목록 조회 메소드
     public List<AlarmResponse> getAllAlarms() {
@@ -76,51 +76,51 @@ public class AlarmService {
     }
 
 
-    // 알람 트리거 메서드: unlockDate에 도달한 알람들을 트리거
-    @Scheduled(fixedRate = 60000) // 1분마다 실행
-    public void triggerAlarms() {
-        LocalDateTime currentTime = LocalDateTime.now(); // 현재 시간
-        List<Alarm> alarms = alarmRepository.findAllByUnlockDateLessThanEqualAndIsConfirmFalse(currentTime);
+//    // 알람 트리거 메서드: unlockDate에 도달한 알람들을 트리거
+//    @Scheduled(fixedRate = 60000) // 1분마다 실행
+//    public void triggerAlarms() {
+//        LocalDateTime currentTime = LocalDateTime.now(); // 현재 시간
+//        List<Alarm> alarms = alarmRepository.findAllByUnlockDateLessThanEqualAndIsConfirmFalse(currentTime);
+//
+//        for (Alarm alarm : alarms) {
+//            // FCM 푸시 알림 전송
+//            String message = "타임캡슐이 해제되었습니다: " + alarm.getTitle();
+//            String userId = alarm.getUser().getId();
+//            sendNotificationToUser(userId, message);
+//
+//            // 알람을 확인된 것으로 업데이트
+//            alarm.setIsConfirm(true);
+//            alarmRepository.save(alarm);
+//        }
+//    }
 
-        for (Alarm alarm : alarms) {
-            // FCM 푸시 알림 전송
-            String message = "타임캡슐이 해제되었습니다: " + alarm.getTitle();
-            String userId = alarm.getUser().getId();
-            sendNotificationToUser(userId, message);
-
-            // 알람을 확인된 것으로 업데이트
-            alarm.setIsConfirm(true);
-            alarmRepository.save(alarm);
-        }
-    }
-
-    // FCM 푸시 알림 전송 메서드
-    private void sendNotificationToUser(String userId, String message) {
-        Optional<UserToken> userToken = userTokenRepository.findByUserId(userId);
-
-        if (userToken.isPresent()) {
-            String fcmToken = userToken.get().getToken();
-            // FCM을 통해 알림 전송
-            sendNotification(fcmToken, "알람", message);
-        }
-    }
-
-    // FCM 알림 전송 로직
-    private void sendNotification(String targetToken, String title, String body) {
-        try {
-            Message message = Message.builder()
-                    .setToken(targetToken)
-                    .setNotification(Notification.builder()
-                            .setTitle(title)
-                            .setBody(body)
-                            .build())
-                    .build();
-
-            String response = FirebaseMessaging.getInstance().send(message);
-            System.out.println("Successfully sent message: " + response);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    // FCM 푸시 알림 전송 메서드
+//    private void sendNotificationToUser(String userId, String message) {
+//        Optional<UserToken> userToken = userTokenRepository.findByUserId(userId);
+//
+//        if (userToken.isPresent()) {
+//            String fcmToken = userToken.get().getToken();
+//            // FCM을 통해 알림 전송
+//            sendNotification(fcmToken, "알람", message);
+//        }
+//    }
+//
+//    // FCM 알림 전송 로직
+//    private void sendNotification(String targetToken, String title, String body) {
+//        try {
+//            Message message = Message.builder()
+//                    .setToken(targetToken)
+//                    .setNotification(Notification.builder()
+//                            .setTitle(title)
+//                            .setBody(body)
+//                            .build())
+//                    .build();
+//
+//            String response = FirebaseMessaging.getInstance().send(message);
+//            System.out.println("Successfully sent message: " + response);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

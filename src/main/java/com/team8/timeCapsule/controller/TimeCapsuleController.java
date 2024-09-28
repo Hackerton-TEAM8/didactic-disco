@@ -87,7 +87,7 @@ public class TimeCapsuleController {
     }
 
     // 특정 유저의 닫힌 타임캡슐 조회
-    @GetMapping("/opened/{userId}")
+    @GetMapping("/closed/{userId}")
     public ResponseEntity<List<TimeCapsuleResponse>> getClosedTimeCapsulesByUserId(@PathVariable String userId) {
         List<TimeCapsuleResponse> responses = timeCapsuleService.getClosedTimeCapsulesByUserId(userId);
         return ResponseEntity.ok(responses);
