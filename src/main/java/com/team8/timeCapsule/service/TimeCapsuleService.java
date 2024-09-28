@@ -40,7 +40,7 @@ public class TimeCapsuleService {
         timeCapsule.setText(request.getText());
         timeCapsule.setImageUrl(imageUrl);
         timeCapsule.setCreateDate(LocalDateTime.now());
-        timeCapsule.setIsActive(true);
+        timeCapsule.setIsActive(false);
         timeCapsule.setUnlockDate(request.getUnlockDate());
 
         timeCapsuleRepository.save(timeCapsule);
