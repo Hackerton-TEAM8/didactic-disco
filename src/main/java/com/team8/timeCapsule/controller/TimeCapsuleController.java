@@ -3,7 +3,9 @@ package com.team8.timeCapsule.controller;
 
 import com.team8.timeCapsule.dto.TimeCapsuleRequest;
 import com.team8.timeCapsule.dto.TimeCapsuleResponse;
+import com.team8.timeCapsule.security.TokenProvider;
 import com.team8.timeCapsule.service.TimeCapsuleService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import java.util.List;
 public class TimeCapsuleController {
 
     private final TimeCapsuleService timeCapsuleService;
+    private final TokenProvider tokenProvider;
 
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<String> createTimeCapsule(
@@ -44,7 +47,7 @@ public class TimeCapsuleController {
     @PutMapping("/{id}")
     public ResponseEntity<String> updateTimeCapsule(
             @PathVariable Long id,
-            @RequestPart("data") TimeCapsuleRequest request,
+            @RequestPart("json") TimeCapsuleRequest request,
             @RequestPart(value = "file", required = false) MultipartFile file) {
         timeCapsuleService.updateTimeCapsule(id, request, file);
         return ResponseEntity.ok("타임캡슐 수정 완료");
@@ -63,9 +66,31 @@ public class TimeCapsuleController {
         return ResponseEntity.ok(responses);
     }
 
+    @GetMapping("/user")
+    public ResponseEntity<List<TimeCapsuleResponse>> getTimeCapsulesByUserId(HttpServletRequest request) {
+        // 요청 헤더에서 JWT 토큰을 추출합니다.
+        String token = tokenProvider.getTokenFromRequest(request);
+
+        // 토큰에서 userId를 추출합니다.
+        String userId = tokenProvider.validateAndGetUserId(token);
+
+        // 추출한 userId를 사용하여 타임캡슐을 조회합니다.
+        List<TimeCapsuleResponse> responses = timeCapsuleService.getTimeCapsulesByUserId(userId);
+        return ResponseEntity.ok(responses);
+    }
+
     // 특정 유저의 열린 타임캡슐 조회
     @GetMapping("/opened/{userId}")
     public ResponseEntity<List<TimeCapsuleResponse>> getOpenedTimeCapsulesByUserId(@PathVariable String userId) {
+        List<TimeCapsuleResponse> responses = timeCapsuleService.getOpenedTimeCapsulesByUserId(userId);
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/opened")
+    public ResponseEntity<List<TimeCapsuleResponse>> getOpenedTimeCapsulesByUserId(HttpServletRequest request) {
+        String token = tokenProvider.getTokenFromRequest(request);
+        String userId = tokenProvider.validateAndGetUserId(token);
+
         List<TimeCapsuleResponse> responses = timeCapsuleService.getOpenedTimeCapsulesByUserId(userId);
         return ResponseEntity.ok(responses);
     }

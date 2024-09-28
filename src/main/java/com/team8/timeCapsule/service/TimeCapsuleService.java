@@ -84,6 +84,7 @@ public class TimeCapsuleService {
 
         timeCapsule.setText(request.getText());
         timeCapsule.setUnlockDate(request.getUnlockDate());
+        timeCapsule.setIsActive(request.getIsActive());
         // 변경된 내용 저장은 @Transactional에 의해 자동으로 처리됩니다.
     }
 
