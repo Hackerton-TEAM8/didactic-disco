@@ -3,7 +3,7 @@ package com.team8.timeCapsule.service;
 import com.team8.timeCapsule.dto.FriendProfileResponse;
 import com.team8.timeCapsule.domain.Follow;
 import com.team8.timeCapsule.domain.UserEntity;
-import com.team8.timeCapsule.domain.FriendRequestStatus; // 추가
+import com.team8.timeCapsule.domain.FriendRequestStatus;
 import com.team8.timeCapsule.repository.FollowRepository;
 import com.team8.timeCapsule.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,38 +21,83 @@ public class FriendService {
     private FollowRepository followRepository;
 
     @Autowired
-    private UserRepository userRepository; // UserRepository 주입
+    private UserRepository userRepository;
 
     public FriendProfileResponse getFriendList(String userId) {
         UserEntity user = userRepository.findById(userId).orElse(null);
         if (user == null) {
-            // 유저가 없을 경우 적절한 처리
             return FriendProfileResponse.builder().friends(Collections.emptyList()).build();
         }
 
-        // ACCEPT 상태의 FriendRequestStatus를 사용하여 친구 목록을 가져옵니다.
         List<Follow> friends = followRepository.findBySenderOrReceiverAndState(user, user, FriendRequestStatus.ACCEPT);
 
-        // DTO로 변환
         List<FriendProfileResponse.FriendDto> friendDtos = friends.stream()
                 .map(follow -> {
-                    // 친구 ID 가져오기
                     UserEntity friend = follow.getSender().equals(user) ? follow.getReceiver() : follow.getSender();
-
-                    // 친구 이름 설정
-                    String friendName = friend.getUsername(); // UserEntity에서 username을 가져옵니다.
+                    String friendName = friend.getUsername();
 
                     return FriendProfileResponse.FriendDto.builder()
-                            .friendId(friend.getId()) // 친구 ID 설정
-                            .friendName(friendName) // 친구 이름 설정
-                            .status(follow.getState()) // 친구 요청 상태 설정
+                            .friendId(friend.getId())
+                            .friendName(friendName)
+                            .status(follow.getState())
                             .build();
                 })
                 .collect(Collectors.toList());
 
-        // FriendProfileResponse를 생성하여 친구 목록을 반환합니다.
         return FriendProfileResponse.builder()
-                .friends(friendDtos) // 친구 목록 설정
+                .friends(friendDtos)
                 .build();
+    }
+
+    public Follow sendFriendRequest(String senderId, String receiverId) {
+        UserEntity sender = userRepository.findById(senderId)
+                .orElseThrow(() -> new IllegalArgumentException("Sender not found"));
+        UserEntity receiver = userRepository.findById(receiverId)
+                .orElseThrow(() -> new IllegalArgumentException("Receiver not found"));
+
+        Follow follow = new Follow();
+        follow.setSender(sender);
+        follow.setReceiver(receiver);
+        follow.setState(FriendRequestStatus.RECEIVE);
+
+        return followRepository.save(follow);
+    }
+
+    public Follow acceptFriendRequest(String senderId, String receiverId) {
+        Optional<Follow> followOpt = followRepository.findBySenderAndReceiverAndState(
+                userRepository.findById(senderId).orElse(null),
+                userRepository.findById(receiverId).orElse(null),
+                FriendRequestStatus.RECEIVE);
+
+        if (followOpt.isPresent()) {
+            Follow follow = followOpt.get();
+            follow.setState(FriendRequestStatus.ACCEPT);
+            return followRepository.save(follow);
+        }
+        throw new IllegalArgumentException("Friend request not found or already accepted");
+    }
+
+    public void rejectFriendRequest(String senderId, String receiverId) {
+        Optional<Follow> followOpt = followRepository.findBySenderAndReceiverAndState(
+                userRepository.findById(senderId).orElse(null),
+                userRepository.findById(receiverId).orElse(null),
+                FriendRequestStatus.RECEIVE);
+
+        followOpt.ifPresent(follow -> {
+            follow.setState(FriendRequestStatus.DELETE);
+            followRepository.save(follow);
+        });
+    }
+
+    public void deleteFriend(String senderId, String receiverId) {
+        Optional<Follow> followOpt = followRepository.findBySenderAndReceiverAndState(
+                userRepository.findById(senderId).orElse(null),
+                userRepository.findById(receiverId).orElse(null),
+                FriendRequestStatus.ACCEPT);
+
+        followOpt.ifPresent(follow -> {
+            follow.setState(FriendRequestStatus.DELETE);
+            followRepository.save(follow);
+        });
     }
 }

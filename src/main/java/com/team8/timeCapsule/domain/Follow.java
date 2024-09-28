@@ -26,7 +26,7 @@ public class Follow {
     @JoinColumn(name = "receiver_id", nullable = false)
     private UserEntity receiver;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FriendRequestStatus state;
 
