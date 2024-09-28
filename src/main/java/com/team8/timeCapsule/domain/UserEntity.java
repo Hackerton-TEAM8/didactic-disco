@@ -31,6 +31,9 @@ public class UserEntity {
     @Column(nullable=true)
     private String password;
 
+    @Column(nullable=true)
+    private String profileImageUrl;  // 사용자 이미지 URL 추가
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Alarm> alarms;
+    private List<TimeCapsule> timeCapsules;
 }

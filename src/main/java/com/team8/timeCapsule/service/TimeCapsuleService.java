@@ -2,6 +2,7 @@ package com.team8.timeCapsule.service;
 
 
 import com.team8.timeCapsule.domain.TimeCapsule;
+import com.team8.timeCapsule.domain.UserEntity;
 import com.team8.timeCapsule.dto.TimeCapsuleRequest;
 import com.team8.timeCapsule.dto.TimeCapsuleResponse;
 import com.team8.timeCapsule.repository.TimeCapsuleRepository;
@@ -21,29 +22,47 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TimeCapsuleService {
 
-    private final TimeCapsuleRepository timeCapsuleRepository;
     private final s3Service s3Service;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private TimeCapsuleRepository timeCapsuleRepository;
 
     @Transactional
     public void createTimeCapsule(TimeCapsuleRequest request, MultipartFile file) {
-        String imageUrl = null;
+        UserEntity user = userService.findById(request.getUserId());
+
+        String timeCapsuleImageUrl = null;
 
         if (file != null && !file.isEmpty()) {
             try {
-                imageUrl = s3Service.uploadFile(file);
+                timeCapsuleImageUrl = s3Service.uploadFile(file);
             } catch (IOException e) {
                 throw new RuntimeException("파일 업로드 실패", e);
             }
         }
 
+        // TimeCapsule 객체 생성
         TimeCapsule timeCapsule = new TimeCapsule();
-        timeCapsule.setUserId(request.getUserId());
+
+        timeCapsule.setUser(user);
+
+        // 소유자의 이름과 프로필 이미지 URL 가져오기
+        String ownerName = user.getUsername(); // 소유자 이름
+        String profileImageUrl = user.getProfileImageUrl(); // 소유자 프로필 이미지 URL
+
         timeCapsule.setText(request.getText());
-        timeCapsule.setImageUrl(imageUrl);
+        timeCapsule.setImageUrl(timeCapsuleImageUrl);
         timeCapsule.setTitle(request.getTitle());
         timeCapsule.setCreateDate(LocalDateTime.now());
         timeCapsule.setIsActive(false);
         timeCapsule.setUnlockDate(request.getUnlockDate());
+
+        // 사용자 이름과 프로필 이미지 설정 (원하는 경우)
+        timeCapsule.setUsername(ownerName); // 소유자 이름 설정
+        timeCapsule.setProfileImageUrl(profileImageUrl); // 소유자 프로필 이미지 URL 설정
 
         timeCapsuleRepository.save(timeCapsule);
     }
@@ -99,12 +118,13 @@ public class TimeCapsuleService {
     }
 
     public List<TimeCapsuleResponse> getTimeCapsulesByUserId(String userId) {
-        List<TimeCapsule> timeCapsules = timeCapsuleRepository.findByUserId(userId);
+        UserEntity user = userService.findById(userId); // 사용자 객체 가져오기
+        List<TimeCapsule> timeCapsules = timeCapsuleRepository.findByUser(user); // 사용자 객체를 사용하여 타임캡슐 조회
 
         return timeCapsules.stream()
                 .map(timeCapsule -> new TimeCapsuleResponse(
                         timeCapsule.getTimeCapsuleId(),
-                        timeCapsule.getUserId(),  // 이 부분은 String으로 반환되어야 합니다
+                        timeCapsule.getUser().getId(),
                         timeCapsule.getImageUrl(),
                         timeCapsule.getTitle(),
                         timeCapsule.getText(),

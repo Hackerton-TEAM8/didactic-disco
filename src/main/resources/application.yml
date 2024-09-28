@@ -6,11 +6,11 @@ spring:
         driverClassName: org.h2.Driver
         username: sa
         password: ""
+        initialization-mode: never
     h2:
         console:
             enabled: true
             path: /h2-console
-
 
     # JPA ??
     jpa:
@@ -21,12 +21,13 @@ spring:
                 show_sql: false
         hibernate:
             ddl-auto: update
+        show-sql: true
 
     flyway:
         enabled: true
-        url: jdbc:mysql://localhost:3306/your_database
-        user: your_db_user
-        password: your_db_password
+        url: jdbc:h2:~/local2
+        user: sa
+        password: ""
         locations: classpath:db/migration
         baseline-on-migrate: true
 

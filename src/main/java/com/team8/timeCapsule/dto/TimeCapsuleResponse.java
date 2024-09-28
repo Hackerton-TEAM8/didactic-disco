@@ -33,12 +33,12 @@ public class TimeCapsuleResponse {
     // TimeCapsule 엔티티에서 데이터를 받아오는 생성자
     public TimeCapsuleResponse(TimeCapsule timeCapsule) {
         this.timeCapsuleId = timeCapsule.getTimeCapsuleId();
-        this.userId = timeCapsule.getUserId();  // userId는 String으로
+        this.userId = timeCapsule.getUser().getId();
         this.imageUrl = timeCapsule.getImageUrl();
         this.title = timeCapsule.getTitle();
         this.text = timeCapsule.getText();
         this.createDate = timeCapsule.getCreateDate();
-        this.isActive = timeCapsule.getIsActive();  // Boolean으로 맞춰야 함
+        this.isActive = timeCapsule.getIsActive();
         this.unlockDate = timeCapsule.getUnlockDate();
     }
 }

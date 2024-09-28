@@ -21,7 +21,7 @@ public class TimeCapsuleRequest {
 
     private Boolean isActive;  // 활성화 여부 필드 추가
 
+    private String username;   // 사용자 이름 필드 추가
 
-
-    // 사진은 MultipartFile로 처리하므로 여기서는 제외합니다.
+    private String imageUrl;   // 이미지 URL 필드 추가
 }

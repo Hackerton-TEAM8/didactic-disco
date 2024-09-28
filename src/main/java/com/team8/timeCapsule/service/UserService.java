@@ -29,6 +29,7 @@ public class UserService {
 
         return userRepository.save(userEntity);
     }
+
     public UserEntity getByCredentials(final String email, final String password, final PasswordEncoder encoder) {
         final UserEntity originalUser = userRepository.findByEmail(email);
         if(originalUser !=null && encoder.matches(password, originalUser.getPassword())){
@@ -37,8 +38,13 @@ public class UserService {
         return null;
     }
 
-    public UserEntity getById(String userId) {
-        Optional<UserEntity> user = userRepository.findById(userId);
-        return user.orElse(null);
+    // 사용자 ID로 UserEntity 조회
+    public UserEntity findById(String userId) {
+        Optional<UserEntity> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            return optionalUser.get();
+        } else {
+            throw new RuntimeException("사용자를 찾을 수 없습니다.");
+        }
     }
 }
