@@ -7,6 +7,8 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Setter
 @Getter
 @Entity
@@ -18,5 +20,6 @@ public class Alarm {
     private String content;
     private Boolean isConfirm;
     private Long timeCapsuleId;
+    private LocalDateTime unlockDate;
 
 }
