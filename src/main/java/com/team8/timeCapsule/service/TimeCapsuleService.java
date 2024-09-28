@@ -40,6 +40,7 @@ public class TimeCapsuleService {
         timeCapsule.setUserId(request.getUserId());
         timeCapsule.setText(request.getText());
         timeCapsule.setImageUrl(imageUrl);
+        timeCapsule.setTitle(request.getTitle());
         timeCapsule.setCreateDate(LocalDateTime.now());
         timeCapsule.setIsActive(false);
         timeCapsule.setUnlockDate(request.getUnlockDate());
@@ -81,10 +82,11 @@ public class TimeCapsuleService {
                 throw new RuntimeException("파일 업로드 실패", e);
             }
         }
-
+        timeCapsule.setTitle(request.getTitle());
         timeCapsule.setText(request.getText());
         timeCapsule.setUnlockDate(request.getUnlockDate());
         timeCapsule.setIsActive(request.getIsActive());
+        timeCapsule.setTitle(request.getTitle());
         // 변경된 내용 저장은 @Transactional에 의해 자동으로 처리됩니다.
     }
 
@@ -104,10 +106,12 @@ public class TimeCapsuleService {
                         timeCapsule.getTimeCapsuleId(),
                         timeCapsule.getUserId(),  // 이 부분은 String으로 반환되어야 합니다
                         timeCapsule.getImageUrl(),
+                        timeCapsule.getTitle(),
                         timeCapsule.getText(),
                         timeCapsule.getCreateDate(),
                         timeCapsule.getIsActive(),
-                        timeCapsule.getUnlockDate()))
+                        timeCapsule.getUnlockDate()
+                        ))
                 .collect(Collectors.toList());
     }
 

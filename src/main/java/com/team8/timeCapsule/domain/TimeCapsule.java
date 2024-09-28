@@ -20,6 +20,8 @@ public class TimeCapsule {
 
     private String imageUrl;
 
+    private String title;  // Add this line
+
     @Column(columnDefinition = "TEXT")
     private String text;
 
@@ -28,5 +30,4 @@ public class TimeCapsule {
     private Boolean isActive;
 
     private LocalDateTime unlockDate;
-
 }
