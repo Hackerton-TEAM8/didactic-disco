@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class TimeCapsuleRequest {
 
     @NotNull(message = "userId는 필수입니다.")
-    private Long userId;
+    private String userId;
 
     private String text;
 
